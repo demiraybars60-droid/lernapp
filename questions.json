@@ -1,0 +1,12 @@
+[
+  {"id":"q01","thema":"Kanalisation","frage":"Worin unterscheiden sich Misch- und Trennsystem?","antwort":"Mischsystem: Schmutz- und Regenwasser werden gemeinsam in einem Kanal abgeleitet. Trennsystem: Schmutz- und Regenwasser werden getrennt in zwei Kanälen geführt."},
+  {"id":"q02","thema":"Kanalisation","frage":"Nennen Sie je zwei Vor- und Nachteile des Mischsystems.","antwort":"Vorteile: nur ein Kanal nötig, kein Risiko von Fehlanschlüssen. Nachteile: Überlastung bei Starkregen, größere Dimensionierung der Kläranlage nötig."},
+  {"id":"q03","thema":"Kanalisation","frage":"Nennen Sie je zwei Vor- und Nachteile des Trennsystems.","antwort":"Vorteile: Kläranlage wird bei Regen nicht überlastet, bessere Reinigung. Nachteile: zwei Leitungen nötig, Gefahr von Fehlanschlüssen."},
+  {"id":"q04","thema":"Kanalisation","frage":"Wozu dienen Regenüberlauf-/Regenspeicherbauwerke im Mischsystem?","antwort":"Zur Zwischenspeicherung bei Starkregen, um die Kläranlage zu entlasten und unkontrollierten Überlauf zu vermeiden."},
+  {"id":"q05","thema":"Kanalisation","frage":"Nennen Sie zwei temporäre Entlastungsbauwerke.","antwort":"Regenüberlaufbecken (RÜB), Regenrückhaltebecken (RRB)."},
+  {"id":"q06","thema":"Kanalisation","frage":"Beschreiben Sie die grabenlose Verlegung und nennen Sie zwei Vorteile.","antwort":"Verlegung ohne offenen Graben durch Pressen/Bohren. Vorteile: geringe Beeinträchtigung der Oberfläche, schnellere Ausführung."},
+  {"id":"q07","thema":"Kanalisation","frage":"Nennen Sie vier Materialien für Abwasserrohre.","antwort":"Steinzeug, Beton, Gusseisen, PVC."},
+  {"id":"q08","thema":"Kanalisation","frage":"Was ist Fremdwasser?","antwort":"Unerwünschtes Wasser, das zusätzlich ins Kanalnetz gelangt, z.B. infiltrierendes Grundwasser über undichte Rohre."},
+  {"id":"q09","thema":"Kanalisation","frage":"Welchen Kostenanteil hat das Kanalnetz an den Abwasserentsorgungskosten?","antwort":"Ca. 70-80% der Gesamtkosten."},
+  {"id":"q10","thema":"Kanalisation","frage":"Wassereinsparung: Problem bei zu starker Einsparung?","antwort":"Zu geringe Fließgeschwindigkeit führt zu Ablagerungen/Verstopfung und Geruchsbildung im Kanal."}
+]

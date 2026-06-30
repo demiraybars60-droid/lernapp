@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Karteikarten – Kanalisation</title>
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
+  <style>
+    html, body { -webkit-tap-highlight-color: transparent; }
+    /* sichere Abstände für Notch / Home-Indicator */
+    .safe-top { padding-top: env(safe-area-inset-top); }
+    .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+    .card-flip { transition: transform .15s ease; }
+    .card-flip:active { transform: scale(.99); }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col safe-top safe-bottom select-none">
+
+  <!-- Fortschrittsanzeige -->
+  <header class="px-4 pt-4">
+    <div class="flex items-center justify-between mb-2">
+      <h1 class="text-lg font-bold">Kanalisation – Lernkarten</h1>
+      <button id="resetBtn" class="text-xs text-slate-400 underline">Zurücksetzen</button>
+    </div>
+    <div id="progressWrap" class="hidden">
+      <div class="flex justify-between text-xs text-slate-400 mb-1">
+        <span id="progressLabel">0 / 0</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
+        <div id="progressBar" class="h-full bg-emerald-500 transition-all duration-300" style="width:0%"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 flex flex-col px-4 py-6 max-w-xl w-full mx-auto">
+
+    <!-- Startbildschirm -->
+    <section id="homeScreen" class="flex-1 flex flex-col items-center justify-center text-center gap-6">
+      <div>
+        <p class="text-6xl font-extrabold" id="dueCount">0</p>
+        <p class="text-slate-400 mt-1">Karten heute fällig</p>
+      </div>
+      <button id="startBtn"
+        class="card-flip w-full max-w-sm bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white text-xl font-bold py-6 rounded-2xl shadow-lg">
+        Lernen starten
+      </button>
+      <p id="homeHint" class="text-sm text-slate-500"></p>
+    </section>
+
+    <!-- Lernkarte -->
+    <section id="cardScreen" class="hidden flex-1 flex flex-col gap-4">
+      <div class="bg-slate-800 rounded-2xl p-6 shadow-lg flex-1 flex flex-col">
+        <span id="cardThema" class="text-xs uppercase tracking-wide text-emerald-400 font-semibold mb-3"></span>
+        <p id="cardFrage" class="text-2xl font-bold leading-snug"></p>
+
+        <div id="answerBlock" class="hidden mt-6 pt-6 border-t border-slate-700">
+          <p class="text-xs uppercase tracking-wide text-slate-400 mb-2">Antwort</p>
+          <p id="cardAntwort" class="text-lg leading-relaxed text-slate-200"></p>
+        </div>
+      </div>
+
+      <!-- Antwort zeigen -->
+      <button id="showBtn"
+        class="card-flip w-full bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white text-lg font-bold py-5 rounded-2xl shadow">
+        Antwort zeigen
+      </button>
+
+      <!-- Bewertungsbuttons -->
+      <div id="rateButtons" class="hidden grid grid-cols-3 gap-2">
+        <button data-grade="0"
+          class="card-flip bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white font-bold py-5 rounded-2xl text-sm shadow">
+          Wusste ich<br>nicht
+        </button>
+        <button data-grade="1"
+          class="card-flip bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-white font-bold py-5 rounded-2xl text-sm shadow">
+          Halb
+        </button>
+        <button data-grade="2"
+          class="card-flip bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold py-5 rounded-2xl text-sm shadow">
+          Wusste<br>ich
+        </button>
+      </div>
+    </section>
+
+    <!-- Fertig -->
+    <section id="doneScreen" class="hidden flex-1 flex flex-col items-center justify-center text-center gap-6">
+      <p class="text-5xl">🎉</p>
+      <div>
+        <p class="text-2xl font-bold">Geschafft!</p>
+        <p class="text-slate-400 mt-1">Keine fälligen Karten mehr.</p>
+      </div>
+      <button id="backHomeBtn"
+        class="card-flip w-full max-w-sm bg-slate-700 hover:bg-slate-600 active:bg-slate-800 text-white text-lg font-bold py-5 rounded-2xl shadow">
+        Zurück zum Start
+      </button>
+    </section>
+
+  </main>
+
+  <footer class="text-center text-xs text-slate-600 pb-4 px-4">
+    Offline-fähig · Fortschritt wird lokal gespeichert
+  </footer>
+
+  <script>
+  (function () {
+    "use strict";
+
+    const STORAGE_KEY = "lernapp_progress_v1";
+    const DAY_MS = 24 * 60 * 60 * 1000;
+
+    // DOM
+    const el = (id) => document.getElementById(id);
+    const homeScreen = el("homeScreen");
+    const cardScreen = el("cardScreen");
+    const doneScreen = el("doneScreen");
+    const progressWrap = el("progressWrap");
+
+    let questions = [];      // alle Fragen aus questions.json
+    let progress = {};       // pro id: {ease_factor, interval_days, next_review}
+    let queue = [];          // ids der heute fälligen Karten (für diese Session)
+    let sessionTotal = 0;    // Anzahl Karten zu Sessionbeginn
+    let current = null;      // aktuelle Frage
+
+    // ---------- Datum-Helfer ----------
+    // Datum als YYYY-MM-DD (lokaler Tag), damit "fällig" tagesgenau ist.
+    function todayStr() {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return toDateStr(d);
+    }
+    function toDateStr(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    }
+    function addDaysStr(days) {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      d.setTime(d.getTime() + days * DAY_MS);
+      return toDateStr(d);
+    }
+    function isDue(p) {
+      // next_review <= heute  => fällig
+      return p.next_review <= todayStr();
+    }
+
+    // ---------- Speicherung ----------
+    function loadProgress() {
+      try {
+        progress = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      } catch (e) {
+        progress = {};
+      }
+    }
+    function saveProgress() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    }
+    function ensureCard(id) {
+      if (!progress[id]) {
+        progress[id] = {
+          ease_factor: 2.5,
+          interval_days: 0,
+          next_review: todayStr() // neue Karten sind sofort fällig
+        };
+      }
+      return progress[id];
+    }
+
+    // ---------- Spaced-Repetition ----------
+    // grade: 0 = Wusste ich nicht, 1 = Halb, 2 = Wusste ich
+    function applyGrade(id, grade) {
+      const p = ensureCard(id);
+
+      if (grade === 0) {
+        // Falsch: morgen erneut, Leichtigkeit senken
+        p.ease_factor = Math.max(1.3, p.ease_factor - 0.2);
+        p.interval_days = 1;
+      } else if (grade === 1) {
+        // Halb: Intervall wächst leicht
+        if (p.interval_days <= 0) {
+          p.interval_days = 1;
+        } else if (p.interval_days === 1) {
+          p.interval_days = 2;
+        } else {
+          // sanftes Wachstum (nur halbe Leichtigkeit)
+          const factor = 1 + (p.ease_factor - 1) / 2;
+          p.interval_days = Math.round(p.interval_days * factor);
+        }
+        // ease unverändert
+      } else {
+        // Wusste ich: Intervall wächst stark, Leichtigkeit steigt
+        p.ease_factor = p.ease_factor + 0.1;
+        if (p.interval_days <= 0) {
+          p.interval_days = 1;
+        } else if (p.interval_days === 1) {
+          p.interval_days = 4;
+        } else {
+          p.interval_days = Math.round(p.interval_days * p.ease_factor);
+        }
+      }
+
+      p.next_review = addDaysStr(p.interval_days);
+      saveProgress();
+    }
+
+    // ---------- Fälligkeit berechnen ----------
+    function computeDue() {
+      const due = [];
+      for (const q of questions) {
+        const p = ensureCard(q.id);
+        if (isDue(p)) due.push(q.id);
+      }
+      return due;
+    }
+
+    // ---------- UI ----------
+    function show(screen) {
+      homeScreen.classList.add("hidden");
+      cardScreen.classList.add("hidden");
+      doneScreen.classList.add("hidden");
+      screen.classList.remove("hidden");
+      // Card-Layout braucht flex
+      if (screen === cardScreen) screen.classList.add("flex");
+    }
+
+    function renderHome() {
+      const due = computeDue();
+      el("dueCount").textContent = due.length;
+      const startBtn = el("startBtn");
+      const hint = el("homeHint");
+      if (due.length === 0) {
+        startBtn.textContent = "Alles wiederholt 🎉";
+        startBtn.disabled = true;
+        startBtn.classList.add("opacity-50");
+        hint.textContent = "Komm morgen wieder, dann sind neue Karten fällig.";
+      } else {
+        startBtn.textContent = "Lernen starten";
+        startBtn.disabled = false;
+        startBtn.classList.remove("opacity-50");
+        hint.textContent = `${questions.length} Karten insgesamt`;
+      }
+      progressWrap.classList.add("hidden");
+      show(homeScreen);
+    }
+
+    function updateProgress() {
+      const done = sessionTotal - queue.length;
+      const pct = sessionTotal === 0 ? 0 : Math.round((done / sessionTotal) * 100);
+      el("progressLabel").textContent = `${done} / ${sessionTotal}`;
+      el("progressPct").textContent = `${pct}%`;
+      el("progressBar").style.width = `${pct}%`;
+    }
+
+    function renderCard() {
+      if (queue.length === 0) {
+        progressWrap.classList.add("hidden");
+        show(doneScreen);
+        return;
+      }
+      const id = queue[0];
+      current = questions.find((q) => q.id === id);
+
+      el("cardThema").textContent = current.thema || "";
+      el("cardFrage").textContent = current.frage;
+      el("cardAntwort").textContent = current.antwort;
+
+      // Antwort verstecken, Bewertung verstecken
+      el("answerBlock").classList.add("hidden");
+      el("rateButtons").classList.add("hidden");
+      el("showBtn").classList.remove("hidden");
+
+      progressWrap.classList.remove("hidden");
+      updateProgress();
+      show(cardScreen);
+    }
+
+    function showAnswer() {
+      el("answerBlock").classList.remove("hidden");
+      el("showBtn").classList.add("hidden");
+      el("rateButtons").classList.remove("hidden");
+    }
+
+    function rate(grade) {
+      if (!current) return;
+      applyGrade(current.id, grade);
+      // Karte aus der heutigen Queue entfernen
+      queue.shift();
+      // Bei "Wusste ich nicht" ans Ende der heutigen Session hängen,
+      // damit man sie nochmal sieht (next_review bleibt trotzdem morgen).
+      if (grade === 0) {
+        queue.push(current.id);
+        sessionTotal += 1; // zählt als zusätzliche Wiederholung
+      }
+      renderCard();
+    }
+
+    function startSession() {
+      queue = computeDue();
+      sessionTotal = queue.length;
+      if (queue.length === 0) {
+        renderHome();
+        return;
+      }
+      renderCard();
+    }
+
+    // ---------- Events ----------
+    el("startBtn").addEventListener("click", startSession);
+    el("showBtn").addEventListener("click", showAnswer);
+    el("backHomeBtn").addEventListener("click", renderHome);
+    document.querySelectorAll("#rateButtons button").forEach((btn) => {
+      btn.addEventListener("click", () => rate(parseInt(btn.dataset.grade, 10)));
+    });
+    el("resetBtn").addEventListener("click", () => {
+      if (confirm("Lernfortschritt wirklich zurücksetzen?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        progress = {};
+        renderHome();
+      }
+    });
+
+    // ---------- Laden ----------
+    async function init() {
+      loadProgress();
+      try {
+        const res = await fetch("questions.json", { cache: "no-cache" });
+        questions = await res.json();
+      } catch (e) {
+        document.querySelector("main").innerHTML =
+          '<p class="text-rose-400 text-center mt-10">questions.json konnte nicht geladen werden.</p>';
+        return;
+      }
+      renderHome();
+    }
+
+    init();
+
+    // ---------- Service Worker ----------
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js").catch(() => {});
+      });
+    }
+  })();
+  </script>
+</body>
+</html>
