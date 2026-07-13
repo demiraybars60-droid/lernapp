@@ -1,7 +1,7 @@
 {
-  "name": "Karteikarten – Kanalisation",
-  "short_name": "Lernkarten",
-  "description": "Offline-Lern-App mit Karteikarten und Spaced Repetition für die Uni-Klausur.",
+  "name": "SWW I – Theorie-Lernkarten",
+  "short_name": "SWW I Karten",
+  "description": "Offline-Karteikarten für Siedlungswasserwirtschaft I (Abwasser + Trinkwasser) mit Lerntagen und Mastery-Logik.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
