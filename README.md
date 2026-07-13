@@ -6,7 +6,9 @@ Uni-Klausur direkt auf dem Handy. Kein Build-Step, kein npm, keine Anmeldung.
 - 📱 **Mobile-first** & Dark Mode als Standard, große Touch-Buttons
 - 🔌 **Offline-fähig** dank Service Worker (nach dem ersten Laden komplett ohne Internet)
 - 💾 **Lernfortschritt** wird lokal im Browser gespeichert (`localStorage`)
-- 🧠 **Spaced Repetition**: Karten kommen je nach Wissen früher oder später wieder
+- 📅 **Lerntage**: 30 Karten in Tage à 10 Fragen aufgeteilt (Tag 1 / Tag 2 / Tag 3) – so hast du die Theorie Schritt für Schritt durch
+- ✅ **Live-Status oben rechts**: wie viele richtig (✅), halb (🟠) und falsch (🔴) sind – plus farbige Chips für jede einzelne Karte
+- 🔁 **Mastery-Logik**: eine Karte gilt erst als „gemeistert", wenn du sie sicher kannst – *Halb* muss 1× richtig, *Falsch* muss **2× hintereinander** richtig beantwortet werden
 - ➕ Installierbar als App auf dem Homescreen (PWA)
 
 ---
@@ -95,28 +97,50 @@ Einfach `questions.json` bearbeiten und weitere Objekte ergänzen:
 
 ---
 
-## 🧠 Wie funktioniert die Spaced-Repetition-Logik?
+## 🗓️ Lerntage
 
-Für jede Karte werden im `localStorage` drei Werte gespeichert:
+Auf dem Startbildschirm wählst du deinen **Lerntag**. Die Tage werden automatisch aus dem
+Feld `tag` in der `questions.json` gebildet:
 
-| Wert | Bedeutung | Startwert |
+- **Tag 1** → Fragen 1–10
+- **Tag 2** → Fragen 11–20
+- **Tag 3** → Fragen 21–30
+
+Jeder Tag zeigt, wie viele seiner Karten du schon **gemeistert** hast (z. B. `7/10 ✅`).
+Mit **„Alle Karten mischen"** kannst du alles zusammen wiederholen.
+
+## 🔁 Mastery-Logik (wie „gemeistert" funktioniert)
+
+Nach jeder Antwort bewertest du dich mit einem der drei Buttons. Eine Karte verlässt die
+Runde erst, wenn du sie wirklich sicher kannst:
+
+| Button | Farbe | Bedingung zum Meistern |
 |---|---|---|
-| `ease_factor` | „Leichtigkeit" der Karte (steuert das Wachstum) | `2.5` |
-| `interval_days` | Tage bis zur nächsten Wiederholung | `0` |
-| `next_review` | Datum der nächsten Fälligkeit (`YYYY-MM-DD`) | heute |
+| **Wusste ich** | 🟢 grün | zählt sofort als sitzt (bei einer neuen Karte reicht 1×). |
+| **Halb** | 🟠 orange | muss **noch 1× richtig** beantwortet werden. |
+| **Wusste ich nicht** | 🔴 rot | muss **2× hintereinander richtig** beantwortet werden. |
 
-Nach jeder Antwort bewertest du dich mit einem der drei Buttons:
+Nicht gemeisterte Karten tauchen in derselben Runde immer wieder auf, bis alle grün sind.
+Nach jeder Antwort leuchtet die Karte kurz grün / orange / rot auf.
 
-| Button | Wirkung |
-|---|---|
-| **Wusste ich nicht** | `interval = 1 Tag`, `ease − 0.2` (min. 1.3). Karte kommt in dieser Session nochmal. |
-| **Halb** | Intervall wächst **leicht** (halbe Leichtigkeit), `ease` unverändert. |
-| **Wusste ich** | Intervall wächst **stark** (× `ease`), `ease + 0.1`. |
+**Live-Status oben rechts:** ✅ = gemeistert, 🟠 = halb (offen), 🔴 = falsch (offen).
+Darunter zeigt eine Reihe **farbiger Chips** jede einzelne Karte (Nummer + Status), damit
+du auf einen Blick siehst, *welche* Karten noch offen sind.
 
-So tauchen schwierige Karten häufig auf, gut gekonnte Karten immer seltener.
+Der Fortschritt wird pro Karte im `localStorage` gespeichert (`mastered` + Status). Mit dem
+Button **„Zurücksetzen"** löschst du den kompletten Lernfortschritt.
 
-Auf dem Startbildschirm steht, **wie viele Karten heute fällig** sind. Mit dem Button
-**„Zurücksetzen"** löschst du den kompletten Lernfortschritt.
+## ➕ Fragen erweitern & neue Lerntage
+
+Neue Frage einfach in `questions.json` ergänzen und mit `"tag": 4` einen weiteren Lerntag
+anlegen – der Tag erscheint dann automatisch auf dem Startbildschirm:
+
+```json
+{ "id": "q31", "tag": 4, "thema": "Kläranlage", "frage": "…", "antwort": "Zeile 1\nZeile 2" }
+```
+
+> 💡 In der `antwort` sorgt `\n` für einen Zeilenumbruch – so kannst du die Antworten
+> übersichtlich in Stichpunkten fürs Auswendiglernen strukturieren.
 
 ---
 
