@@ -6,7 +6,7 @@ Uni-Klausur direkt auf dem Handy. Kein Build-Step, kein npm, keine Anmeldung.
 - 📱 **Mobile-first** & Dark Mode als Standard, große Touch-Buttons
 - 🔌 **Offline-fähig** dank Service Worker (nach dem ersten Laden komplett ohne Internet)
 - 💾 **Lernfortschritt** wird lokal im Browser gespeichert (`localStorage`)
-- 📅 **Lerntage**: 63 Theoriefragen (Siedlungswasserwirtschaft I – Abwasser + Trinkwasser) thematisch auf 7 Lerntage verteilt – in einer Woche die ganze Theorie durch
+- 📅 **Lerntage**: 67 Lernkarten (Siedlungswasserwirtschaft I – Theorie + Formeln, Abwasser & Trinkwasser) thematisch auf 6 Lerntage verteilt – in 6 Tagen alles durch
 - ✅ **Live-Status oben rechts**: wie viele richtig (✅), halb (🟠) und falsch (🔴) sind – plus farbige Chips für jede einzelne Karte
 - 🔁 **Mastery-Logik**: eine Karte gilt erst als „gemeistert", wenn du sie sicher kannst – *Halb* muss 1× richtig, *Falsch* muss **2× hintereinander** richtig beantwortet werden
 - ➕ Installierbar als App auf dem Homescreen (PWA)
@@ -100,20 +100,23 @@ Einfach `questions.json` bearbeiten und weitere Objekte ergänzen:
 ## 🗓️ Lerntage
 
 Auf dem Startbildschirm wählst du deinen **Lerntag**. Die Tage werden automatisch aus dem
-Feld `tag` in der `questions.json` gebildet – aktuell 7 Tage, thematisch gruppiert:
+Feld `tag` in der `questions.json` gebildet – aktuell 6 Tage, thematisch gruppiert:
 
-| Tag | Thema | Fragen |
+| Tag | Thema | Karten |
 |---|---|---|
-| **Tag 1** | Abwasser – Kanalisation & Stadtentwässerung | 9 |
-| **Tag 2** | Abwasser – Parameter (BSB₅/CSB) & Kläranlage I | 9 |
-| **Tag 3** | Abwasser – Kläranlage II (Bio-P, Nitrifikation, Fällung) | 7 |
-| **Tag 4** | Trinkwasser – Filtration, Membranen & Flockung | 9 |
-| **Tag 5** | Trinkwasser – Flockung, Adsorption/Ionentausch & Desinfektion I | 9 |
-| **Tag 6** | Trinkwasser – Desinfektion II & Wasserbedarf | 9 |
-| **Tag 7** | Trinkwasser – Wasserbedarf & Verteilung | 11 |
+| **Tag 1** | Abwasser – Kanalisation & Start Parameter (BSB₅/CSB) | 11 |
+| **Tag 2** | Abwasser – Parameter & Kläranlage I | 10 |
+| **Tag 3** | Abwasser – Kläranlage II + Trinkwasser-Filtration | 11 |
+| **Tag 4** | Trinkwasser – Flockung, Adsorption & Desinfektion I | 11 |
+| **Tag 5** | Trinkwasser – Desinfektion II & Wasserbedarf | 12 |
+| **Tag 6** | Trinkwasser – Verteilung + **Formeln** (Reynolds, Spitzenfaktoren …) | 12 |
 
-Jeder Tag zeigt, wie viele seiner Karten du schon **gemeistert** hast (z. B. `7/9 ✅`).
-Mit **„Alle Karten mischen"** kannst du alle 63 Karten zusammen wiederholen.
+Jeder Tag zeigt, wie viele seiner Karten du schon **gemeistert** hast (z. B. `8/11 ✅`).
+Mit **„Alle Karten mischen"** kannst du alle 67 Karten zusammen wiederholen.
+
+Die **Formel-Karten** (Thema `Formeln`) fragen die klausurrelevanten Formeln separat ab
+(Reynolds-Zahl, Tages-/Stundenspitzenfaktor, Löschwasserreserve, Freundlich-Isotherme,
+Bernoulli). Reine Diagramm-/Zeichenaufgaben sind bewusst nicht enthalten.
 
 > Inhalt: Theoriefragen mit geprüften Lösungen zu *Siedlungswasserwirtschaft I*
 > (TU Hamburg). Fachlich am Skript orientiert und fürs Auswendiglernen strukturiert.
