@@ -114,7 +114,7 @@
       </div>
       <p id="rateHint" class="hidden text-center text-xs text-slate-500"></p>
 
-      <button id="quitBtn" class="text-xs text-slate-500 underline mx-auto mt-1">Session beenden</button>
+      <button id="quitBtn" class="text-xs text-slate-500 underline mx-auto mt-1">Pausieren – Fortschritt ist gespeichert</button>
     </section>
 
     <!-- Fertig -->
@@ -163,7 +163,7 @@
     }
     function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); }
     function cardState(id) {
-      if (!store.cards[id]) store.cards[id] = { status: "neu", mastered: false };
+      if (!store.cards[id]) store.cards[id] = { status: "neu", mastered: false, needs: 1 };
       return store.cards[id];
     }
 
@@ -188,6 +188,13 @@
       screen.classList.add("flex");
     }
 
+    // Fortschritt EINES Tages zurücksetzen
+    function resetDay(cards) {
+      cards.forEach((q) => { delete store.cards[q.id]; });
+      save();
+      renderHome();
+    }
+
     // ---------- Startbildschirm ----------
     function renderHome() {
       session = null;
@@ -201,26 +208,56 @@
       days.forEach((tag) => {
         const cards = cardsOfDay(tag);
         const done = masteredCount(cards);
-        const all = done === cards.length;
+        const total = cards.length;
+        const all = done === total && total > 0;
+        // "angefangen": mind. eine Karte beantwortet, aber noch nicht alles gemeistert
+        const touched = cards.some((q) => {
+          const s = cardState(q.id);
+          return s.mastered || (s.status && s.status !== "neu");
+        });
+        const inProgress = touched && !all;
+        const sub = all ? "gemeistert" : (inProgress ? "weiter machen" : "starten");
+        const accent = all ? "emerald" : (inProgress ? "sky" : "slate");
 
-        const btn = document.createElement("button");
-        btn.className =
-          "press w-full text-left bg-slate-800 hover:bg-slate-700 active:bg-slate-800 " +
+        const row = document.createElement("div");
+        row.className = "flex items-stretch gap-2";
+
+        const main = document.createElement("button");
+        main.className =
+          "press flex-1 text-left bg-slate-800 hover:bg-slate-700 active:bg-slate-800 " +
           "rounded-2xl px-5 py-4 shadow flex items-center justify-between gap-3 border " +
-          (all ? "border-emerald-500" : "border-slate-700");
-        btn.innerHTML =
+          (all ? "border-emerald-500" : (inProgress ? "border-sky-600" : "border-slate-700"));
+        main.innerHTML =
           '<div>' +
             '<p class="text-lg font-bold">Tag ' + tag + '</p>' +
-            '<p class="text-xs text-slate-400 mt-0.5">' + cards.length + ' Fragen · Thema ' +
+            '<p class="text-xs text-slate-400 mt-0.5">' + total + ' Karten · Thema ' +
               (cards[0] ? cards[0].thema : "") + ' u.&nbsp;a.</p>' +
           '</div>' +
           '<div class="text-right shrink-0">' +
-            '<p class="text-sm font-bold ' + (all ? "text-emerald-400" : "text-slate-200") + '">' +
-              done + '/' + cards.length + (all ? " ✅" : "") + '</p>' +
-            '<p class="text-[11px] text-slate-500">gemeistert</p>' +
+            '<p class="text-sm font-bold ' + (all ? "text-emerald-400" : (inProgress ? "text-sky-400" : "text-slate-200")) + '">' +
+              done + '/' + total + (all ? " ✅" : "") + '</p>' +
+            '<p class="text-[11px] text-slate-500">' + sub + '</p>' +
           '</div>';
-        btn.addEventListener("click", () => startSession(cards, "Tag " + tag));
-        list.appendChild(btn);
+        main.addEventListener("click", () => startSession(cards, "Tag " + tag));
+        row.appendChild(main);
+
+        // Zurücksetzen-Knopf nur, wenn der Tag schon angefangen/gemeistert wurde
+        if (touched) {
+          const rb = document.createElement("button");
+          rb.className =
+            "press shrink-0 px-4 rounded-2xl bg-slate-800 border border-slate-700 " +
+            "text-slate-400 hover:text-rose-300 hover:border-rose-500 text-xl";
+          rb.textContent = "↺";
+          rb.setAttribute("aria-label", "Tag " + tag + " zurücksetzen");
+          rb.title = "Tag " + tag + " zurücksetzen";
+          rb.addEventListener("click", (e) => {
+            e.stopPropagation();
+            if (confirm("Tag " + tag + " zurücksetzen? Der Fortschritt dieses Tages geht verloren.")) resetDay(cards);
+          });
+          row.appendChild(rb);
+        }
+
+        list.appendChild(row);
       });
 
       const total = questions.length;
@@ -236,11 +273,21 @@
     // grade 2 = Wusste ich (grün)       -> zählt als richtig (Zähler runter)
     function startSession(cards, label) {
       const shuffled = [...cards].sort(() => Math.random() - 0.5);
+      // Zustand aus dem Speicher wiederherstellen (Fortsetzen)
+      let scards = shuffled.map((q) => {
+        const cs = cardState(q.id);
+        const needs = (typeof cs.needs === "number") ? cs.needs : (cs.mastered ? 0 : 1);
+        return { id: q.id, needs: needs, status: cs.status || "neu" };
+      });
+      // Alles schon gemeistert? -> kompletter Durchlauf als Wiederholung
+      if (scards.every((c) => c.needs <= 0)) {
+        scards = scards.map((c) => ({ id: c.id, needs: 1, status: "neu" }));
+      }
       session = {
         label: label,
-        cards: shuffled.map((q) => ({ id: q.id, needs: 1, status: "neu" })),
-        queue: shuffled.map((q) => q.id),
-        total: shuffled.length
+        cards: scards,
+        queue: scards.filter((c) => c.needs > 0).map((c) => c.id),
+        total: scards.length
       };
       progressWrap.classList.remove("hidden");
       statBar.classList.remove("hidden");
@@ -348,6 +395,13 @@
         st.status = "rot";
       }
 
+      // Fortschritt sofort speichern (Pausieren/Fortsetzen möglich)
+      const cs = cardState(id);
+      cs.needs = st.needs;
+      cs.status = st.status;
+      cs.mastered = st.needs <= 0;
+      save();
+
       flash(grade);
 
       if (st.needs > 0) {
@@ -379,7 +433,7 @@
     // ---------- Events ----------
     el("showBtn").addEventListener("click", showAnswer);
     el("backHomeBtn").addEventListener("click", renderHome);
-    el("quitBtn").addEventListener("click", () => { if (confirm("Session beenden? Fortschritt dieser Runde wird nicht als gemeistert gespeichert.")) renderHome(); });
+    el("quitBtn").addEventListener("click", renderHome);
     el("allBtn").addEventListener("click", () => startSession(questions, "Alle Karten"));
     document.querySelectorAll("#rateButtons button").forEach((btn) => {
       btn.addEventListener("click", () => rate(parseInt(btn.dataset.grade, 10)));

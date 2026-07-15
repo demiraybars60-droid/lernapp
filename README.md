@@ -114,6 +114,12 @@ Feld `tag` in der `questions.json` gebildet – aktuell 6 Tage, thematisch grupp
 Jeder Tag zeigt, wie viele seiner Karten du schon **gemeistert** hast (z. B. `8/11 ✅`).
 Mit **„Alle Karten mischen"** kannst du alle 67 Karten zusammen wiederholen.
 
+**Pausieren & Fortsetzen:** Der Fortschritt wird nach **jeder** Antwort gespeichert – auch
+mitten im Durchlauf. Brichst du z. B. bei „3 gemeistert, 2 halb" ab, steht der Tag auf
+**„weiter machen"** (blau) und du machst genau dort weiter (die schon gemeisterten Karten
+sind raus, die halben/offenen kommen wieder). Mit dem **↺-Knopf** rechts neben einem Tag
+setzt du **nur diesen einen Tag** zurück; „Zurücksetzen" oben löscht den gesamten Fortschritt.
+
 Die **Formel-Karten** (Thema `Formeln`) fragen die klausurrelevanten Formeln separat ab
 (Reynolds-Zahl, Tages-/Stundenspitzenfaktor, Löschwasserreserve, Freundlich-Isotherme,
 Bernoulli). Reine Diagramm-/Zeichenaufgaben sind bewusst nicht enthalten.
