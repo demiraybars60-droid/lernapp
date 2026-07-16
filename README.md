@@ -102,17 +102,27 @@ Einfach `questions.json` bearbeiten und weitere Objekte ergänzen:
 Auf dem Startbildschirm wählst du deinen **Lerntag**. Die Tage werden automatisch aus dem
 Feld `tag` in der `questions.json` gebildet – aktuell 6 Tage, thematisch gruppiert:
 
-| Tag | Thema | Karten |
+| Tag | Fragen (PDF-Nr.) | Karten |
 |---|---|---|
-| **Tag 1** | Abwasser – Bemessung/Schlamm (Ergänzungen 2026) & Kanalisation | 15 |
-| **Tag 2** | Abwasser – Einsparung, Parameter (BSB₅/CSB) & Kläranlage | 14 |
-| **Tag 3** | Trinkwasser – Ergänzungen 2026, Filtration/Membran & Flockung | 15 |
-| **Tag 4** | Trinkwasser – Adsorption/Ionentausch & Desinfektion | 14 |
-| **Tag 5** | Trinkwasser – Wasserbedarf & Verteilung | 14 |
-| **Tag 6** | Trinkwasser – Grundwasser/Brunnen/Hamburg + **Formeln** | 16 |
+| **Tag 1** | 1–17 (Abwasser: Bemessung/Schlamm, Kanalisation, BSB₅) | 17 |
+| **Tag 2** | 18–33 (Kläranlage + Trinkwasser-Ergänzungen 2026) | 16 |
+| **Tag 3** | 34–55 (Filtration, Flockung, Adsorption, Desinfektion) | 22 |
+| **Tag 4** | 56–77 (Wasserbedarf, Verteilung, Grundwasser, Hamburg) + **Formeln** | 33 |
 
-Jeder Tag zeigt, wie viele seiner Karten du schon **gemeistert** hast (z. B. `8/15 ✅`).
+Jeder Tag zeigt, wie viele seiner Karten du schon **gemeistert** hast (z. B. `8/17 ✅`).
 Mit **„Alle Karten mischen"** kannst du alle 88 Karten zusammen wiederholen.
+
+### ⭐ Wichtigkeit (Sterne)
+
+Jede Karte ist nach Klausur-Wichtigkeit markiert (aus dem Skript übernommen):
+
+- **★★★** unbedingt auswendig
+- **★★** wichtig
+- **★** Reserve, wenn Zeit bleibt
+
+Die Sterne stehen oben auf jeder Karte und pro Tag auf dem Startbildschirm. Innerhalb eines
+Lerntags werden die Karten **nach Wichtigkeit sortiert** (★★★ zuerst) – so lernst du das
+Wichtigste zuerst, auch wenn die Zeit knapp wird.
 
 **Pausieren & Fortsetzen:** Der Fortschritt wird nach **jeder** Antwort gespeichert – auch
 mitten im Durchlauf. Brichst du z. B. bei „3 gemeistert, 2 halb" ab, steht der Tag auf
