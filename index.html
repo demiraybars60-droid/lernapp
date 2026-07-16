@@ -24,6 +24,22 @@
     .press:active { transform: scale(.98); }
     /* Antwort mit Zeilenumbrüchen aus JSON (\n) darstellen */
     #cardAntwort { white-space: pre-line; }
+    /* Formel-Darstellung (Brüche, Indizes) */
+    #cardAntwort.html { white-space: normal; }
+    #cardAntwort .formel {
+      display: block; font-size: 1.35rem; font-weight: 700;
+      margin: .2em 0 .5em; line-height: 1.5; overflow-x: auto;
+    }
+    #cardAntwort .hint {
+      display: block; color: #94a3b8; font-size: .9rem; margin: -.1em 0 .6em;
+    }
+    #cardAntwort sub, #cardAntwort sup { font-size: .68em; }
+    .frac {
+      display: inline-flex; flex-direction: column; text-align: center;
+      vertical-align: middle; margin: 0 .15em;
+    }
+    .frac > .num { border-bottom: 2px solid currentColor; padding: 0 .4em; line-height: 1.3; }
+    .frac > .den { padding: 0 .4em; line-height: 1.3; }
     /* kurzes Aufleuchten der Karte nach Bewertung */
     @keyframes flashGreen { 0%{box-shadow:0 0 0 0 rgba(16,185,129,.0)} 30%{box-shadow:0 0 0 4px rgba(16,185,129,.9)} 100%{box-shadow:0 0 0 0 rgba(16,185,129,0)} }
     @keyframes flashAmber { 0%{box-shadow:0 0 0 0 rgba(245,158,11,.0)} 30%{box-shadow:0 0 0 4px rgba(245,158,11,.9)} 100%{box-shadow:0 0 0 0 rgba(245,158,11,0)} }
@@ -363,7 +379,14 @@
 
       el("cardThema").textContent = q.thema || "";
       el("cardFrage").textContent = q.frage;
-      el("cardAntwort").textContent = q.antwort;
+      // Formatierte Antwort (Formeln/Brüche) via HTML, sonst reiner Text
+      if (q.antwortHtml) {
+        el("cardAntwort").innerHTML = q.antwortHtml;
+        el("cardAntwort").classList.add("html");
+      } else {
+        el("cardAntwort").textContent = q.antwort;
+        el("cardAntwort").classList.remove("html");
+      }
 
       // Wichtigkeit als Sterne
       const w = q.wichtigkeit || 1;
