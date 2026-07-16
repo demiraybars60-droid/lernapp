@@ -6,7 +6,7 @@ Uni-Klausur direkt auf dem Handy. Kein Build-Step, kein npm, keine Anmeldung.
 - 📱 **Mobile-first** & Dark Mode als Standard, große Touch-Buttons
 - 🔌 **Offline-fähig** dank Service Worker (nach dem ersten Laden komplett ohne Internet)
 - 💾 **Lernfortschritt** wird lokal im Browser gespeichert (`localStorage`)
-- 📅 **Lerntage**: 67 Lernkarten (Siedlungswasserwirtschaft I – Theorie + Formeln, Abwasser & Trinkwasser) thematisch auf 6 Lerntage verteilt – in 6 Tagen alles durch
+- 📅 **Lerntage**: 88 Lernkarten (Siedlungswasserwirtschaft I – 77 Theoriefragen + 11 Formeln, Prüfung 21.07.2026) thematisch auf 6 Lerntage verteilt – in 6 Tagen alles durch
 - ✅ **Live-Status oben rechts**: wie viele richtig (✅), halb (🟠) und falsch (🔴) sind – plus farbige Chips für jede einzelne Karte
 - 🔁 **Mastery-Logik**: eine Karte gilt erst als „gemeistert", wenn du sie sicher kannst – *Halb* muss 1× richtig, *Falsch* muss **2× hintereinander** richtig beantwortet werden
 - ➕ Installierbar als App auf dem Homescreen (PWA)
@@ -104,15 +104,15 @@ Feld `tag` in der `questions.json` gebildet – aktuell 6 Tage, thematisch grupp
 
 | Tag | Thema | Karten |
 |---|---|---|
-| **Tag 1** | Abwasser – Kanalisation & Start Parameter (BSB₅/CSB) | 11 |
-| **Tag 2** | Abwasser – Parameter & Kläranlage I | 10 |
-| **Tag 3** | Abwasser – Kläranlage II + Trinkwasser-Filtration | 11 |
-| **Tag 4** | Trinkwasser – Flockung, Adsorption & Desinfektion I | 11 |
-| **Tag 5** | Trinkwasser – Desinfektion II & Wasserbedarf | 12 |
-| **Tag 6** | Trinkwasser – Verteilung + **Formeln** (Reynolds, Spitzenfaktoren …) | 12 |
+| **Tag 1** | Abwasser – Bemessung/Schlamm (Ergänzungen 2026) & Kanalisation | 15 |
+| **Tag 2** | Abwasser – Einsparung, Parameter (BSB₅/CSB) & Kläranlage | 14 |
+| **Tag 3** | Trinkwasser – Ergänzungen 2026, Filtration/Membran & Flockung | 15 |
+| **Tag 4** | Trinkwasser – Adsorption/Ionentausch & Desinfektion | 14 |
+| **Tag 5** | Trinkwasser – Wasserbedarf & Verteilung | 14 |
+| **Tag 6** | Trinkwasser – Grundwasser/Brunnen/Hamburg + **Formeln** | 16 |
 
-Jeder Tag zeigt, wie viele seiner Karten du schon **gemeistert** hast (z. B. `8/11 ✅`).
-Mit **„Alle Karten mischen"** kannst du alle 67 Karten zusammen wiederholen.
+Jeder Tag zeigt, wie viele seiner Karten du schon **gemeistert** hast (z. B. `8/15 ✅`).
+Mit **„Alle Karten mischen"** kannst du alle 88 Karten zusammen wiederholen.
 
 **Pausieren & Fortsetzen:** Der Fortschritt wird nach **jeder** Antwort gespeichert – auch
 mitten im Durchlauf. Brichst du z. B. bei „3 gemeistert, 2 halb" ab, steht der Tag auf
@@ -120,9 +120,12 @@ mitten im Durchlauf. Brichst du z. B. bei „3 gemeistert, 2 halb" ab, steht der
 sind raus, die halben/offenen kommen wieder). Mit dem **↺-Knopf** rechts neben einem Tag
 setzt du **nur diesen einen Tag** zurück; „Zurücksetzen" oben löscht den gesamten Fortschritt.
 
-Die **Formel-Karten** (Thema `Formeln`) fragen die klausurrelevanten Formeln separat ab
-(Reynolds-Zahl, Tages-/Stundenspitzenfaktor, Löschwasserreserve, Freundlich-Isotherme,
-Bernoulli). Reine Diagramm-/Zeichenaufgaben sind bewusst nicht enthalten.
+Die **Formel-Karten** (Thema `Formeln`, in Tag 6) fragen die klausurrelevanten Formeln
+separat ab (Fracht, Einwohnerwert, Trockenwetterabfluss, Beckenvolumen, Absetzfläche,
+Spitzenfaktoren, Membranrückhalt & -fluss, Reynolds, Bernoulli). Inhaltlich beruhen alle
+Karten auf der Theoriefragen-Sammlung *Siedlungswasserwirtschaft I* (TU Hamburg, Prüfung
+21.07.2026). Die im Skript enthaltenen Zeichen-/Diagrammaufgaben sind als Text-Karten
+(„beschreibe/erkläre") enthalten – die App rendert keine Diagramme.
 
 > Inhalt: Theoriefragen mit geprüften Lösungen zu *Siedlungswasserwirtschaft I*
 > (TU Hamburg). Fachlich am Skript orientiert und fürs Auswendiglernen strukturiert.
