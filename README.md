@@ -104,10 +104,10 @@ Feld `tag` in der `questions.json` gebildet – aktuell 6 Tage, thematisch grupp
 
 | Tag | Fragen (PDF-Nr.) | Karten |
 |---|---|---|
-| **Tag 1** | 1–17 (Abwasser: Bemessung/Schlamm, Kanalisation, BSB₅) | 17 |
-| **Tag 2** | 18–33 (Kläranlage + Trinkwasser-Ergänzungen 2026) | 16 |
-| **Tag 3** | 34–55 (Filtration, Flockung, Adsorption, Desinfektion) | 22 |
-| **Tag 4** | 56–77 (Wasserbedarf, Verteilung, Grundwasser, Hamburg) + **Formeln** | 33 |
+| **Tag 1** | 1–22 (Abwasser: Bemessung/Schlamm, Kanalisation, BSB₅, Kläranlage) | 22 |
+| **Tag 2** | 23–44 (Kläranlage + Trinkwasser: Ergänzungen 2026, Filtration) | 22 |
+| **Tag 3** | 45–66 (Flockung, Adsorption, Desinfektion, Wasserbedarf) | 22 |
+| **Tag 4** | 67–77 (Verteilung, Grundwasser, Hamburg) + **Formeln** | 22 |
 
 Jeder Tag zeigt, wie viele seiner Karten du schon **gemeistert** hast (z. B. `8/17 ✅`).
 Mit **„Alle Karten mischen"** kannst du alle 88 Karten zusammen wiederholen.
