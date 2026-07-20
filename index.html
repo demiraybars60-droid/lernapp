@@ -92,7 +92,7 @@
 
     <!-- Lernkarte -->
     <section id="cardScreen" class="hidden flex-1 flex-col gap-4">
-      <div id="cardBox" class="bg-slate-800 rounded-2xl p-6 shadow-lg flex-1 flex flex-col">
+      <div id="cardBox" class="press bg-slate-800 rounded-2xl p-6 shadow-lg flex-1 flex flex-col cursor-pointer">
         <div class="flex items-center justify-between mb-3 gap-2">
           <div class="flex items-center gap-2 min-w-0">
             <span id="cardThema" class="text-xs uppercase tracking-wide text-emerald-400 font-semibold truncate"></span>
@@ -107,6 +107,8 @@
           <p id="cardAntwort" class="text-[17px] leading-relaxed text-slate-100"></p>
         </div>
       </div>
+
+      <p class="text-center text-[11px] text-slate-500 -mt-1">Tippe auf die Karte, um zwischen Frage und Lösung zu wechseln · oben auf eine Nummer tippen springt zur Frage</p>
 
       <button id="showBtn"
         class="press w-full bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white text-lg font-bold py-5 rounded-2xl shadow">
@@ -354,10 +356,13 @@
         if (c.needs <= 0) cls = "bg-emerald-600 text-white";
         else if (c.status === "orange") cls = "bg-amber-500 text-white";
         else if (c.status === "rot") cls = "bg-rose-600 text-white";
-        const chip = document.createElement("span");
+        const chip = document.createElement("button");
+        chip.type = "button";
         chip.className =
-          "w-7 h-7 rounded-full text-[11px] font-bold flex items-center justify-center " + cls;
+          "press w-7 h-7 rounded-full text-[11px] font-bold flex items-center justify-center " + cls;
         chip.textContent = num;
+        chip.title = "Zu Frage " + num + " springen";
+        chip.addEventListener("click", () => jumpTo(c.id));
         row.appendChild(chip);
       });
       renderStats();
@@ -415,6 +420,27 @@
       const hint = el("rateHint");
       hint.textContent = "🟠 Halb = 1× richtig nötig · 🔴 Falsch = 2× richtig hintereinander";
       hint.classList.remove("hidden");
+    }
+
+    function hideAnswer() {
+      el("answerBlock").classList.add("hidden");
+      el("rateButtons").classList.add("hidden");
+      el("rateHint").classList.add("hidden");
+      el("showBtn").classList.remove("hidden");
+    }
+
+    // Tippen auf die Karte dreht zwischen Frage und Lösung um
+    function toggleAnswer() {
+      if (el("answerBlock").classList.contains("hidden")) showAnswer();
+      else hideAnswer();
+    }
+
+    // Zu einer bestimmten Karte springen (Klick auf die Nummer oben)
+    function jumpTo(id) {
+      if (!session) return;
+      const rest = session.cards.filter((c) => c.needs > 0 && c.id !== id).map((c) => c.id);
+      session.queue = [id].concat(rest);
+      nextCard();
     }
 
     function flash(kind) {
@@ -477,6 +503,7 @@
 
     // ---------- Events ----------
     el("showBtn").addEventListener("click", showAnswer);
+    el("cardBox").addEventListener("click", toggleAnswer);
     el("backHomeBtn").addEventListener("click", renderHome);
     el("quitBtn").addEventListener("click", renderHome);
     document.querySelectorAll("#rateButtons button").forEach((btn) => {
