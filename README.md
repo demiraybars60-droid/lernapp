@@ -102,19 +102,24 @@ Einfach `questions.json` bearbeiten und weitere Objekte ergänzen:
 Auf dem Startbildschirm wählst du deinen **Lerntag**. Die Tage werden automatisch aus dem
 Feld `tag` in der `questions.json` gebildet – aktuell 6 Tage, thematisch gruppiert:
 
-Inhalt: **Klausur-Pflichtkern** (50 Karten) aus der Theoriefragen-Sammlung
-*Siedlungswasserwirtschaft I* (TU Hamburg, Prüfung 21.07.2026), auf 2 Tage verteilt:
+Inhalt: **Theorie-Mussfragen** *Siedlungswasserwirtschaft I* (Prüfung 21.07.2026),
+in **6 getrennt wählbare Abteilungen** gegliedert (Reihenfolge/Nummerierung wie in der PDF):
 
-| Tag | Inhalt | Karten |
-|---|---|---|
-| **Tag 1** | Abwasser komplett + Start Trinkwasser (Membran, Pumpen, Speicher) | 25 |
-| **Tag 2** | Trinkwasser (Filtration, Flockung, Desinfektion, Verteilung, Grundwasser) | 25 |
+| Abteilung | Karten |
+|---|---|
+| **Abwasser – MUSS-Fragen** | 17 |
+| **Abwasser – RESERVE-Fragen** | 3 |
+| **Trinkwasser – MUSS-Fragen** | 22 |
+| **Trinkwasser – RESERVE-Fragen** | 3 |
+| **Zahlen und Formeln** | 10 |
+| **15-Minuten-Selbsttest** | 15 |
 
-Jeder Tag zeigt, wie viele seiner Karten du schon **gemeistert** hast (z. B. `8/25 ✅`).
-Mit **„Alle Karten mischen"** kannst du alle 50 Karten zusammen wiederholen.
+Jede Karte: **Vorderseite** = vollständige Frage, **Rückseite** = die zugehörigen
+Stichpunkte – wortgetreu aus der PDF, ohne Ergänzungen. MUSS/RESERVE und Abwasser/Trinkwasser
+sind strikt getrennt; die Karten laufen in PDF-Reihenfolge (kein Mischen).
 
-Nicht gemeisterte Karten (🟠/🔴) kommen erst nach **5–6 weiteren Karten** wieder – so hast
-du genug Abstand und paukst nicht dieselbe Karte direkt hintereinander.
+Jede Abteilung zeigt, wie viele Karten du schon **gemeistert** hast (z. B. `8/17 ✅`).
+Nicht gemeisterte Karten (🟠/🔴) kommen erst nach **5–6 weiteren Karten** wieder.
 
 ### ⭐ Wichtigkeit (Sterne)
 
