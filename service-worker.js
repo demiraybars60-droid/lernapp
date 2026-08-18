@@ -1,7 +1,7 @@
 // Service Worker für die Karteikarten-PWA
 // Cache-First-Strategie: App läuft komplett offline, sobald sie einmal geladen wurde.
 
-const CACHE_NAME = "lernapp-cache-v12";
+const CACHE_NAME = "lernapp-cache-v13";
 
 // Dateien, die beim Installieren gecacht werden (App-Shell).
 const APP_SHELL = [

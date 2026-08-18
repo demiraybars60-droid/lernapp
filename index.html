@@ -40,6 +40,19 @@
     }
     .frac > .num { border-bottom: 2px solid currentColor; padding: 0 .4em; line-height: 1.3; }
     .frac > .den { padding: 0 .4em; line-height: 1.3; }
+    /* Strukturierte Rückseite */
+    #cardAntwort .ln { display: block; margin: .3em 0; }
+    #cardAntwort .hd { color: #f1f5f9; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; }
+    #cardAntwort .hd2 { display: block; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; color: #f1f5f9; margin: .5em 0 .15em; }
+    #cardAntwort .chem {
+      display: block; margin: .3em 0; padding: .4em .7em; border-radius: .55em;
+      background: rgba(37,99,235,.16); border: 1px solid rgba(59,130,246,.45);
+      color: #bfdbfe; font-weight: 600; overflow-x: auto;
+    }
+    #cardAntwort .merksatz {
+      display: block; margin: .55em 0 .1em; padding: .45em .7em; border-radius: .55em;
+      background: rgba(16,185,129,.15); border: 1px solid rgba(16,185,129,.45); color: #a7f3d0;
+    }
     /* kurzes Aufleuchten der Karte nach Bewertung */
     @keyframes flashGreen { 0%{box-shadow:0 0 0 0 rgba(16,185,129,.0)} 30%{box-shadow:0 0 0 4px rgba(16,185,129,.9)} 100%{box-shadow:0 0 0 0 rgba(16,185,129,0)} }
     @keyframes flashAmber { 0%{box-shadow:0 0 0 0 rgba(245,158,11,.0)} 30%{box-shadow:0 0 0 4px rgba(245,158,11,.9)} 100%{box-shadow:0 0 0 0 rgba(245,158,11,0)} }
@@ -170,6 +183,17 @@
     };
     const sectionName = (t) => SECTION_NAMES[t] || ("Abteilung " + t);
 
+    // Farbige Abteilungs-Überschrift für den Startbildschirm
+    const SECTION_LABEL = {
+      1: '<span class="text-sky-400">Abwasser</span> <span class="text-slate-500">·</span> <span class="text-rose-400">MUSS</span>',
+      2: '<span class="text-sky-400">Abwasser</span> <span class="text-slate-500">·</span> <span class="text-slate-400">RESERVE</span>',
+      3: '<span class="text-emerald-400">Trinkwasser</span> <span class="text-slate-500">·</span> <span class="text-rose-400">MUSS</span>',
+      4: '<span class="text-emerald-400">Trinkwasser</span> <span class="text-slate-500">·</span> <span class="text-slate-400">RESERVE</span>',
+      5: '<span class="text-indigo-300">Zahlen und Formeln</span>',
+      6: '<span class="text-slate-300">15-Minuten-Selbsttest</span>'
+    };
+    const sectionLabelHtml = (t) => SECTION_LABEL[t] || sectionName(t);
+
     const el = (id) => document.getElementById(id);
     const homeScreen = el("homeScreen");
     const cardScreen = el("cardScreen");
@@ -257,7 +281,7 @@
           (all ? "border-emerald-500" : (inProgress ? "border-sky-600" : "border-slate-700"));
         main.innerHTML =
           '<div class="min-w-0">' +
-            '<p class="text-base font-bold leading-tight">' + name + '</p>' +
+            '<p class="text-base font-bold leading-tight">' + sectionLabelHtml(tag) + '</p>' +
             '<p class="text-xs text-slate-400 mt-0.5">' + total + ' Karten</p>' +
           '</div>' +
           '<div class="text-right shrink-0">' +
@@ -374,7 +398,17 @@
       const q = questions.find((x) => x.id === id);
       const st = sState(id);
 
-      el("cardThema").textContent = q.thema || "";
+      // Fachbereich + Priorität oben (farbig)
+      const FACH = { 1:["ABWASSER","text-sky-400"], 2:["ABWASSER","text-sky-400"],
+                     3:["TRINKWASSER","text-emerald-400"], 4:["TRINKWASSER","text-emerald-400"],
+                     5:["ZAHLEN UND FORMELN","text-indigo-300"], 6:["15-MINUTEN-SELBSTTEST","text-slate-300"] };
+      const PRIO = { 1:["MUSS","text-rose-400"], 2:["RESERVE","text-slate-400"],
+                     3:["MUSS","text-rose-400"], 4:["RESERVE","text-slate-400"] };
+      const f = FACH[q.tag] || ["", "text-slate-300"];
+      const p = PRIO[q.tag];
+      let head = '<span class="' + f[1] + ' font-bold">' + f[0] + '</span>';
+      if (p) head += ' <span class="text-slate-500">·</span> <span class="' + p[1] + ' font-bold">' + p[0] + '</span>';
+      el("cardThema").innerHTML = head;
       el("cardFrage").textContent = q.frage;
       // Formatierte Antwort (Formeln/Brüche) via HTML, sonst reiner Text
       if (q.antwortHtml) {
